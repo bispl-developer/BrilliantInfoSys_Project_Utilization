@@ -400,6 +400,55 @@ input:focus {
     object-fit: contain;
 }
 
+
+#projectName {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #374151;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    outline: none;
+    cursor: pointer;
+    box-sizing: border-box;
+
+    /* Dropdown arrow */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 40px;
+}
+
+#projectName:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+#projectName:hover {
+    border-color: #9ca3af;
+}
+
+#projectName option {
+    padding: 10px;
+    color: #374151;
+    background: #ffffff;
+}
+
+/* Mobile responsive */
+@media (max-width: 600px) {
+    #projectName {
+        padding: 11px 12px;
+        font-size: 14px;
+    }
+}
+
 .preview-table {
     width: 100%;
     border-collapse: collapse;
@@ -490,7 +539,18 @@ input:focus {
 
     <div class="card">
         <div class="form-grid">
-            <input type="text" id="projectName" placeholder="Enter Project Name">
+            <!-- <input type="text" id="projectName" placeholder="Enter Project Name"> -->
+<select id="projectName" name="projectName" class="form-control">
+    <option value="">Select Project Name</option>
+    <option value="Sobha Modular">Sobha Modular</option>
+    <option value="Exelixi">Exelixi</option>
+    <option value="WMS">WMS</option>
+    <option value="WMS">GWC</option>
+    <option value="DFDS">DFDS</option>
+     <option value="Samsonite">Samsonite</option>
+     <option value="Pollution Doser">Pollution Doser</option>
+</select>
+
             <input type="number" id="workingDays" placeholder="Working Days">
             <button class="add-btn" onclick="addProject()">+ Add Project</button>
         </div>
@@ -588,7 +648,14 @@ function addProject(){
         return;
     }
 
+    
+
     if(isNaN(workingDays) || workingDays < 0){
+        alert("Please enter valid working days");
+        return;
+    }
+
+    if(isNaN(workingDays) || workingDays > 22){
         alert("Please enter valid working days");
         return;
     }
