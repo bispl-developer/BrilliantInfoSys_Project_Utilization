@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Utilization Calculator</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+:root {
+    --navy: #061428;
+    --navy-mid: #0a2748;
+    --navy-card: #0d335c;
+    --blue: #1565c0;
+    --blue-bright: #1e88e5;
+    --blue-light: #42a5f5;
+    --ice: #e8f4ff;
+    --ice-soft: #f4f9ff;
+    --white: #ffffff;
+    --text: #0b1f36;
+    --muted: #4a6a8a;
+    --primary: #1565c0;
+    --success: #1e88e5;
+    --danger: #c62828;
+}
+
+body {
+    min-height: 100vh;
+    background:
+        radial-gradient(1200px 500px at 10% -10%, #1565c0 0%, transparent 45%),
+        radial-gradient(900px 400px at 100% 0%, #0d47a1 0%, transparent 40%),
+        linear-gradient(165deg, var(--navy) 0%, var(--navy-mid) 55%, #082445 100%);
+    color: var(--white);
+    padding: 20px;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(6, 20, 40, 0.88);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: linear-gradient(180deg, #0e3a6b 0%, #0a2748 100%);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    padding: 30px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 420px;
+    text-align: center;
+    box-shadow: 0 24px 50px rgba(0, 40, 90, 0.45);
+}
+
+.modal-content h2 {
+    margin-bottom: 10px;
+    color: var(--white);
+}
+
+.modal-content p {
+    color: #c5ddf5;
+    margin-bottom: 25px;
+    font-size: 14px;
+}
+
+.modal-content input {
+    margin-bottom: 15px;
+    background: var(--white);
+    color: var(--text);
+}
+
+.modal-content input::placeholder {
+    color: #7a97b3;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--blue-bright), var(--blue));
+    color: var(--white);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .3s;
+    margin-top: 10px;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(30, 136, 229, 0.4);
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.header h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: var(--white);
+}
+
+.header > p {
+    color: #c5ddf5;
+}
+
+.employee-profile {
+    background: var(--white);
+    border: 1px solid #cfe4f8;
+    border-radius: 15px;
+    padding: 15px 25px;
+    display: inline-block;
+    margin-top: 15px;
+    box-shadow: 0 8px 24px rgba(8, 40, 90, 0.2);
+}
+
+.employee-profile h3 {
+    color: var(--blue);
+    font-size: 1.4rem;
+    margin-bottom: 4px;
+}
+
+.employee-profile p {
+    color: var(--muted);
+    font-size: 1rem;
+    margin: 0;
+}
+
+.card {
+    background: var(--white);
+    color: var(--text);
+    border: 1px solid #d6e8f8;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 12px 28px rgba(6, 28, 64, 0.22);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr auto;
+    gap: 15px;
+}
+
+.action-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+input {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #c5d9ee;
+    border-radius: 12px;
+    font-size: 15px;
+    outline: none;
+    background: var(--ice-soft);
+    color: var(--text);
+}
+
+input:focus {
+    border-color: var(--blue-bright);
+    box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.18);
+}
+
+.add-btn,
+.pdf-btn,
+.import-btn,
+.excel-btn {
+    border: none;
+    color: var(--white);
+    border-radius: 12px;
+    padding: 14px 20px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
+    transition: .3s;
+}
+
+.add-btn {
+    background: linear-gradient(135deg, var(--blue-bright), var(--blue));
+}
+
+.pdf-btn {
+    background: linear-gradient(135deg, #1976d2, #0d47a1);
+}
+
+.import-btn {
+    background: linear-gradient(135deg, #42a5f5, #1565c0);
+}
+
+.excel-btn {
+    background: linear-gradient(135deg, #1e88e5, #0b3d91);
+}
+
+.add-btn:hover,
+.pdf-btn:hover,
+.import-btn:hover,
+.excel-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 18px rgba(21, 101, 192, 0.28);
+}
+
+.excel-btn:disabled,
+.import-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.note {
+    margin-top: 12px;
+    color: var(--muted);
+    text-align: center;
+    font-size: 14px;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+}
+
+.summary-box {
+    background: linear-gradient(180deg, var(--ice) 0%, var(--white) 100%);
+    border: 1px solid #d4e7f8;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+}
+
+.summary-title {
+    color: var(--muted);
+    margin-bottom: 10px;
+}
+
+.summary-value {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--navy-mid);
+}
+
+.project-list {
+    display: grid;
+    gap: 20px;
+}
+
+.project-card {
+    background: var(--white);
+    color: var(--text);
+    border: 1px solid #d6e8f8;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 10px 24px rgba(6, 28, 64, 0.16);
+}
+
+.project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.project-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--navy-mid);
+}
+
+.delete-btn {
+    background: var(--danger);
+    color: var(--white);
+    border: none;
+    padding: 10px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.project-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+}
+
+.stat {
+    background: var(--ice);
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid #d4e7f8;
+}
+
+.stat-title {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.stat-value {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-top: 6px;
+    color: var(--blue);
+}
+
+.progress {
+    width: 100%;
+    height: 12px;
+    background: #d7e6f5;
+    border-radius: 50px;
+    overflow: hidden;
+    margin-top: 15px;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #42a5f5, #0d47a1);
+    transition: .5s;
+}
+
+.import-status {
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: var(--ice);
+    border: 1px solid #cfe4f8;
+    color: var(--navy-mid);
+    font-size: 14px;
+}
+
+.file-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.file-chip {
+    background: var(--white);
+    border: 1px solid #b9d4ee;
+    color: var(--blue);
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.preview-wrap {
+    overflow-x: auto;
+    margin-top: 14px;
+}
+
+
+
+.logo {
+    width: 100%;
+    height: 90px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto 15px;
+    border-radius: 14px;
+    padding: 10px;
+}
+
+.dashboard-logo {
+    width: 100%;
+    height: 58px;
+    object-fit: contain;
+    vertical-align: middle;
+    margin-right: 12px;
+    border-radius: 10px;
+}
+
+.report-logo {
+    width: 22;
+    height: 22;
+    object-fit: contain;
+}
+
+.preview-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 720px;
+}
+
+.preview-table th,
+.preview-table td {
+    border: 1px solid #d4e7f8;
+    padding: 10px 12px;
+    text-align: left;
+    font-size: 13px;
+}
+
+.preview-table th {
+    background: linear-gradient(135deg, #1565c0, #0d47a1);
+    color: var(--white);
+}
+
+.preview-table tr:nth-child(even) td {
+    background: var(--ice-soft);
+}
+
+.footer {
+    margin-top: 30px;
+    text-align: center;
+    color: #c5ddf5;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 15px;
+    padding: 18px;
+}
+
+.footer strong {
+    color: var(--white);
+}
+
+@media(max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    .action-bar button {
+        width: 100%;
+    }
+    .project-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .delete-btn {
+        width: 100%;
+    }
+}
+</style>
+</head>
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<div id="employeeModal" class="modal-overlay">
+    <div class="modal-content">
+         <img class="logo" src="brilliant_logo.png" alt="Company Logo">
+        <h2>Welcome to <br> Project Utilization Tracker</h2>
+        <p>Please enter your details to initialize your workspace.</p>
+        <input type="text" id="empNameInput" placeholder="Enter your Full Name" required>
+        <input type="text" id="empRoleInput" placeholder="Enter your Designation" required>
+        <button class="submit-btn" onclick="initializeDashboard()">Proceed to Dashboard</button>
+    </div>
+</div>
+
+<div class="container">
+
+    <div class="header">
+        <img class="dashboard-logo" src="brilliant_logo.png" alt="Company Logo">
+        <h1>Project Utilization Calculator</h1>
+        <p>
+            Monthly Capacity = 22 Working Days × 8 Hours =
+            <strong>176 Hours</strong>
+        </p>
+        <div class="employee-profile" id="employeeProfileDisplay" style="display: none;">
+            <h3 id="displayEmpName">Name</h3>
+            <p id="displayEmpRole">Designation</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="form-grid">
+            <input type="text" id="projectName" placeholder="Enter Project Name">
+            <input type="number" id="workingDays" placeholder="Working Days">
+            <button class="add-btn" onclick="addProject()">+ Add Project</button>
+        </div>
+
+        <div class="action-bar">
+            <button class="pdf-btn" onclick="generatePDF()">Generate PDF Report</button>
+            <button class="import-btn" onclick="document.getElementById('pdfFiles').click()">Import PDF Reports</button>
+            <button class="excel-btn" id="excelBtn" onclick="downloadExcel()" disabled>Download Excel Sheet</button>
+            <input type="file" id="pdfFiles" accept="application/pdf,.pdf" multiple hidden onchange="importPdfs(event)">
+        </div>
+
+        <div class="note">
+            Total Hours = Working Days × 8 Hours. Import one or more PDF reports to extract data into Excel.
+        </div>
+    </div>
+
+    <div class="card" id="importCard" style="display: none;">
+        <h3 style="color:#0a2748; margin-bottom: 8px;">Imported PDF Data</h3>
+        <div class="import-status" id="importStatus"></div>
+        <div class="file-chips" id="fileChips"></div>
+        <div class="preview-wrap">
+            <table class="preview-table" id="previewTable"></table>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="summary-grid">
+            <div class="summary-box">
+                <div class="summary-title">Monthly Capacity</div>
+                <div class="summary-value">176 Hrs</div>
+            </div>
+            <div class="summary-box">
+                <div class="summary-title">Allocated Hours</div>
+                <div class="summary-value" id="totalHours">0</div>
+            </div>
+            <div class="summary-box">
+                <div class="summary-title">Utilization</div>
+                <div class="summary-value" id="totalPercentage">0%</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="projectList" class="project-list"></div>
+
+    <footer class="footer">
+        Developed by : <strong>Brilliant Info System Pvt. Ltd.</strong> © 2026
+    </footer>
+
+</div>
+
+<script>
+const HOURS_PER_DAY = 8;
+const WORKING_DAYS_MONTH = 22;
+const MONTHLY_CAPACITY = HOURS_PER_DAY * WORKING_DAYS_MONTH;
+
+let projects = [];
+let employeeData = { name: "", role: "" };
+let importedReports = [];
+
+if (window.pdfjsLib) {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+}
+
+function initializeDashboard() {
+    const name = document.getElementById("empNameInput").value.trim();
+    const role = document.getElementById("empRoleInput").value.trim();
+
+    if (name === "" || role === "") {
+        alert("Please enter both your Name and Designation to continue.");
+        return;
+    }
+
+    employeeData.name = name;
+    employeeData.role = role;
+
+    document.getElementById("displayEmpName").innerText = employeeData.name;
+    document.getElementById("displayEmpRole").innerText = employeeData.role;
+    document.getElementById("employeeProfileDisplay").style.display = "inline-block";
+    document.getElementById("employeeModal").style.display = "none";
+}
+
+document.getElementById("empRoleInput").addEventListener("keypress", function(e){
+    if(e.key === "Enter") initializeDashboard();
+});
+document.getElementById("empNameInput").addEventListener("keypress", function(e){
+    if(e.key === "Enter") initializeDashboard();
+});
+
+function addProject(){
+    const projectName = document.getElementById("projectName").value.trim();
+    const workingDays = parseFloat(document.getElementById("workingDays").value);
+
+    if(projectName === ""){
+        alert("Please enter project name");
+        return;
+    }
+
+    if(isNaN(workingDays) || workingDays < 0){
+        alert("Please enter valid working days");
+        return;
+    }
+
+    projects.push({
+        id: Date.now(),
+        name: projectName,
+        days: workingDays
+    });
+
+    document.getElementById("projectName").value = "";
+    document.getElementById("workingDays").value = "";
+
+    renderProjects();
+}
+
+function deleteProject(id){
+    projects = projects.filter(project => project.id !== id);
+    renderProjects();
+}
+
+function renderProjects(){
+    const container = document.getElementById("projectList");
+    let totalHours = 0;
+
+    if(projects.length === 0){
+        container.innerHTML = "";
+        document.getElementById("totalHours").innerText = "0";
+        document.getElementById("totalPercentage").innerText = "0%";
+        return;
+    }
+
+    container.innerHTML = projects.map(project => {
+        const projectHours = project.days * HOURS_PER_DAY;
+        const percentage = ((projectHours / MONTHLY_CAPACITY) * 100).toFixed(2);
+
+        totalHours += projectHours;
+
+        return `
+        <div class="project-card">
+            <div class="project-header">
+                <div class="project-name">${project.name}</div>
+                <button class="delete-btn" onclick="deleteProject(${project.id})">Delete</button>
+            </div>
+            <div class="project-stats">
+                <div class="stat">
+                    <div class="stat-title">Working Days</div>
+                    <div class="stat-value">${project.days}</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-title">Total Hours</div>
+                    <div class="stat-value">${projectHours}</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-title">Monthly Capacity</div>
+                    <div class="stat-value">176</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-title">Utilization %</div>
+                    <div class="stat-value">${percentage}%</div>
+                </div>
+            </div>
+            <div class="progress">
+                <div class="progress-bar" style="width:${Math.min(percentage, 100)}%"></div>
+            </div>
+        </div>
+        `;
+    }).join("");
+
+    const totalPercentage = ((totalHours / MONTHLY_CAPACITY) * 100).toFixed(2);
+    document.getElementById("totalHours").innerText = totalHours + " Hrs";
+    document.getElementById("totalPercentage").innerText = totalPercentage + "%";
+}
+
+async function generatePDF() {
+    if (projects.length === 0) {
+        alert("No projects available to generate report.");
+        return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF("p", "mm", "a4");
+
+    const capacityHours = 176;
+    let totalHours = 0;
+    const chartLabels = [];
+    const chartValues = [];
+
+    projects.forEach(project => {
+        const hours = project.days * 8;
+        totalHours += hours;
+        chartLabels.push(project.name);
+        chartValues.push(hours);
+    });
+
+    const utilization = ((totalHours / capacityHours) * 100).toFixed(1);
+
+    doc.setFillColor(13, 71, 161);
+    doc.rect(0, 0, 210, 30, "F");
+
+ 
+
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(18);
+    doc.setFont("helvetica", "bold");
+    doc.text("PROJECT UTILIZATION REPORT", 15, 18);
+
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Name: ${employeeData.name}`, 195, 14, { align: "right" });
+    doc.text(`Role: ${employeeData.role}`, 195, 21, { align: "right" });
+
+    doc.setFontSize(9);
+    doc.text(`Generated: ${new Date().toLocaleString()}`, 15, 25);
+
+    doc.setTextColor(0);
+    doc.setFillColor(21, 101, 192);
+    doc.roundedRect(10, 40, 55, 25, 3, 3, "F");
+
+    doc.setTextColor(255);
+    doc.setFontSize(10);
+    doc.text("Monthly Capacity", 18, 50);
+    doc.setFontSize(18);
+    doc.text(`${capacityHours} Hrs`, 18, 60);
+
+    doc.setFillColor(30, 136, 229);
+    doc.roundedRect(75, 40, 55, 25, 3, 3, "F");
+
+    doc.setFontSize(10);
+    doc.text("Allocated Hours", 83, 50);
+    doc.setFontSize(18);
+    doc.text(`${totalHours} Hrs`, 83, 60);
+
+    let utilColor = [13, 71, 161];
+    if (utilization > 100) {
+        utilColor = [198, 40, 40];
+    } else if (utilization > 80) {
+        utilColor = [21, 101, 192];
+    }
+
+    doc.setFillColor(...utilColor);
+    doc.roundedRect(140, 40, 55, 25, 3, 3, "F");
+
+    doc.setFontSize(10);
+    doc.text("Utilization", 150, 50);
+    doc.setFontSize(18);
+    doc.text(`${utilization}%`, 150, 60);
+
+    const canvas = document.createElement("canvas");
+    canvas.width = 500;
+    canvas.height = 500;
+    const ctx = canvas.getContext("2d");
+
+    new Chart(ctx, {
+        type: "pie",
+        data: {
+            labels: chartLabels,
+            datasets: [{
+                data: chartValues,
+                backgroundColor: ["#0d47a1", "#1565c0", "#1e88e5", "#42a5f5", "#90caf9", "#1976d2", "#64b5f6", "#bbdefb"]
+            }]
+        },
+        options: {
+            responsive: false,
+            plugins: { legend: { position: "bottom" } }
+        }
+    });
+
+    await new Promise(resolve => setTimeout(resolve, 500));
+    const chartImage = canvas.toDataURL("image/png");
+
+    doc.addImage(chartImage, "PNG", 20, 75, 80, 80);
+
+    doc.setTextColor(0);
+    doc.setFontSize(12);
+    doc.text("Overall Utilization", 120, 90);
+
+    doc.setDrawColor(180);
+    doc.rect(120, 100, 60, 8);
+
+    let barWidth = Math.min((utilization / 100) * 60, 60);
+    doc.setFillColor(...utilColor);
+    doc.rect(120, 100, barWidth, 8, "F");
+
+    doc.text(`${utilization}%`, 145, 115);
+
+    const rows = projects.map(project => {
+        const hours = project.days * 8;
+        return [
+            project.name,
+            project.days,
+            hours,
+            ((hours / capacityHours) * 100).toFixed(1) + "%"
+        ];
+    });
+
+    doc.autoTable({
+        startY: 170,
+        head: [["Project", "Days", "Hours", "Utilization %"]],
+        body: rows,
+        theme: "grid",
+        headStyles: { fillColor: [13, 71, 161] },
+        alternateRowStyles: { fillColor: [232, 244, 255] }
+    });
+
+    const pageHeight = doc.internal.pageSize.height;
+    doc.setFontSize(9);
+    doc.setTextColor(80);
+    doc.text("Brilliant Info System Pvt. Ltd. © 2026", 14, pageHeight - 10);
+
+    const fileName = `${employeeData.name.replace(/\s+/g, '_')}_Utilization_Report_${new Date().toISOString().slice(0, 10)}.pdf`;
+    doc.save(fileName);
+}
+
+async function extractPdfText(file) {
+    const buffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
+    const tokens = [];
+
+    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+        const page = await pdf.getPage(pageNum);
+        const content = await page.getTextContent();
+        const items = content.items.map(item => {
+            const tx = item.transform || [1, 0, 0, 1, 0, 0];
+            return {
+                str: (item.str || "").trim(),
+                x: tx[4],
+                y: tx[5]
+            };
+        }).filter(item => item.str);
+
+        items.sort((a, b) => b.y - a.y || a.x - b.x);
+
+        const lines = [];
+        items.forEach(item => {
+            const last = lines[lines.length - 1];
+            if (!last || Math.abs(last.y - item.y) > 6) {
+                lines.push({ y: item.y, parts: [item] });
+            } else {
+                last.parts.push(item);
+            }
+        });
+
+        lines.forEach(line => {
+            line.parts.sort((a, b) => a.x - b.x);
+            line.parts.forEach(part => tokens.push(part.str));
+        });
+    }
+
+    return tokens;
+}
+
+function parseUtilizationTokens(tokens, fileName) {
+    const report = {
+        fileName,
+        employeeName: "",
+        employeeRole: "",
+        allocatedHours: "",
+        utilization: "",
+        projects: []
+    };
+
+    const joined = tokens.join(" ");
+
+    const nameMatch = joined.match(/Name:\s*(.+?)\s+Role:/i);
+    const roleMatch = joined.match(/Role:\s*(.+?)\s+Generated:/i);
+    if (nameMatch) report.employeeName = nameMatch[1].trim();
+    if (roleMatch) report.employeeRole = roleMatch[1].trim();
+
+    const allocMatch = joined.match(/Allocated Hours\s+(\d+(?:\.\d+)?)\s*Hrs/i);
+    const utilMatch = joined.match(/Utilization\s+(\d+(?:\.\d+)?)\s*%/i);
+    if (allocMatch) report.allocatedHours = allocMatch[1];
+    if (utilMatch) report.utilization = utilMatch[1] + "%";
+
+    let headerIndex = -1;
+    for (let i = 0; i < tokens.length - 3; i++) {
+        const a = tokens[i].toLowerCase();
+        const b = tokens[i + 1].toLowerCase();
+        const c = tokens[i + 2].toLowerCase();
+        const d = tokens[i + 3].toLowerCase();
+        if (a === "project" && b.includes("day") && c.includes("hour") && d.includes("utilization")) {
+            headerIndex = i;
+        }
+    }
+
+    if (headerIndex === -1) {
+        return report;
+    }
+
+    const rest = tokens.slice(headerIndex + 4);
+    const cleaned = [];
+    rest.forEach(token => {
+        if (/^developed by/i.test(token)) return;
+        cleaned.push(token);
+    });
+
+    for (let i = 0; i < cleaned.length; ) {
+        if (/^developed by/i.test(cleaned[i])) break;
+
+        const nameParts = [];
+        while (i < cleaned.length && !/^-?\d+(\.\d+)?%?$/.test(cleaned[i])) {
+            if (/^developed by/i.test(cleaned[i])) break;
+            nameParts.push(cleaned[i]);
+            i++;
+        }
+
+        if (nameParts.length === 0 || i + 2 >= cleaned.length) break;
+
+        const days = parseFloat(String(cleaned[i]).replace("%", ""));
+        const hours = parseFloat(String(cleaned[i + 1]).replace("%", ""));
+        const utilRaw = String(cleaned[i + 2]);
+        const util = parseFloat(utilRaw.replace("%", ""));
+
+        if (isNaN(days) || isNaN(hours) || isNaN(util)) break;
+
+        report.projects.push({
+            name: nameParts.join(" ").trim(),
+            days,
+            hours,
+            utilization: utilRaw.includes("%") ? utilRaw : util.toFixed(1) + "%"
+        });
+
+        i += 3;
+    }
+
+    return report;
+}
+
+function uniqueProjectNames() {
+    const names = [];
+    importedReports.forEach(report => {
+        report.projects.forEach(project => {
+            const name = (project.name || "").trim();
+            if (name && names.indexOf(name) === -1) {
+                names.push(name);
+            }
+        });
+    });
+    return names;
+}
+
+function projectLookup(report) {
+    const map = {};
+    report.projects.forEach(project => {
+        const name = (project.name || "").trim();
+        if (name) map[name] = project;
+    });
+    return map;
+}
+
+function flattenImportedRows() {
+    const rows = [];
+    importedReports.forEach(report => {
+        if (report.projects.length === 0) {
+            rows.push({
+                employeeName: report.employeeName || "",
+                employeeRole: report.employeeRole || "",
+                sourcePdf: report.fileName,
+                project: "",
+                days: "",
+                hours: report.allocatedHours || "",
+                utilization: report.utilization || "",
+                capacity: 176
+            });
+            return;
+        }
+
+        report.projects.forEach(project => {
+            rows.push({
+                employeeName: report.employeeName || "",
+                employeeRole: report.employeeRole || "",
+                sourcePdf: report.fileName,
+                project: project.name,
+                days: project.days,
+                hours: project.hours,
+                utilization: project.utilization,
+                capacity: 176
+            });
+        });
+    });
+    return rows;
+}
+
+function renderImportedPreview() {
+    const card = document.getElementById("importCard");
+    const status = document.getElementById("importStatus");
+    const chips = document.getElementById("fileChips");
+    const table = document.getElementById("previewTable");
+    const excelBtn = document.getElementById("excelBtn");
+    const projectNames = uniqueProjectNames();
+    const rows = flattenImportedRows();
+
+    card.style.display = "block";
+    status.textContent = `Imported ${importedReports.length} PDF file(s). Extracted ${rows.length} project row(s) for Excel.`;
+    chips.innerHTML = importedReports.map(report =>
+        `<span class="file-chip">${report.fileName} (${report.projects.length} project${report.projects.length === 1 ? "" : "s"})</span>`
+    ).join("");
+
+    const projectHeaders = projectNames.map(name =>
+        `<th colspan="2">${name}</th>`
+    ).join("");
+    const projectSubHeaders = projectNames.map(() =>
+        `<th>Hours</th><th>Utilization %</th>`
+    ).join("");
+
+    table.innerHTML = `
+        <thead>
+            <tr>
+                <th rowspan="2">Employee Name</th>
+                <th rowspan="2">Designation</th>
+                <th rowspan="2">Source PDF</th>
+                <th rowspan="2">Allocated Hours</th>
+                <th rowspan="2">Overall Utilization %</th>
+                ${projectHeaders}
+            </tr>
+            <tr>
+                ${projectSubHeaders}
+            </tr>
+        </thead>
+        <tbody>
+            ${importedReports.map(report => {
+                const lookup = projectLookup(report);
+                const allocated = report.allocatedHours || report.projects.reduce((sum, project) => sum + Number(project.hours || 0), 0);
+                const cells = projectNames.map(name => {
+                    const project = lookup[name];
+                    return `<td>${project ? project.hours : ""}</td><td>${project ? project.utilization : ""}</td>`;
+                }).join("");
+                return `
+                    <tr>
+                        <td>${report.employeeName || ""}</td>
+                        <td>${report.employeeRole || ""}</td>
+                        <td>${report.fileName}</td>
+                        <td>${allocated}</td>
+                        <td>${report.utilization || ""}</td>
+                        ${cells}
+                    </tr>
+                `;
+            }).join("")}
+        </tbody>
+    `;
+
+    excelBtn.disabled = importedReports.length === 0;
+}
+
+async function importPdfs(event) {
+    const files = Array.from(event.target.files || []);
+    if (!files.length) return;
+
+    importedReports = [];
+    document.getElementById("excelBtn").disabled = true;
+    document.getElementById("importCard").style.display = "block";
+    document.getElementById("importStatus").textContent = "Reading PDF files...";
+    document.getElementById("fileChips").innerHTML = "";
+    document.getElementById("previewTable").innerHTML = "";
+
+    for (const file of files) {
+        try {
+            const tokens = await extractPdfText(file);
+            importedReports.push(parseUtilizationTokens(tokens, file.name));
+        } catch (error) {
+            importedReports.push({
+                fileName: file.name,
+                employeeName: "",
+                employeeRole: "",
+                allocatedHours: "",
+                utilization: "",
+                projects: []
+            });
+        }
+    }
+
+    renderImportedPreview();
+    event.target.value = "";
+}
+
+function downloadExcel() {
+    if (!importedReports.length) {
+        alert("No imported PDF data available to download.");
+        return;
+    }
+
+    const projectNames = uniqueProjectNames();
+    const baseHeaders = ["Employee Name", "Designation", "Source PDF", "Allocated Hours", "Overall Utilization %"];
+    const headerRow = baseHeaders.concat(projectNames.flatMap(name => [name, ""]));
+    const subHeaderRow = baseHeaders.map(() => "").concat(projectNames.flatMap(() => ["Hours", "Utilization %"]));
+
+    const dataRows = importedReports.map(report => {
+        const lookup = projectLookup(report);
+        const allocated = report.allocatedHours || report.projects.reduce((sum, project) => sum + Number(project.hours || 0), 0);
+        const projectCells = projectNames.flatMap(name => {
+            const project = lookup[name];
+            return project ? [project.hours, project.utilization] : ["", ""];
+        });
+        return [
+            report.employeeName || "",
+            report.employeeRole || "",
+            report.fileName,
+            allocated,
+            report.utilization || "",
+            ...projectCells
+        ];
+    });
+
+    const summarySheet = XLSX.utils.aoa_to_sheet([headerRow, subHeaderRow, ...dataRows]);
+    summarySheet["!merges"] = [
+        { s: { r: 0, c: 0 }, e: { r: 1, c: 0 } },
+        { s: { r: 0, c: 1 }, e: { r: 1, c: 1 } },
+        { s: { r: 0, c: 2 }, e: { r: 1, c: 2 } },
+        { s: { r: 0, c: 3 }, e: { r: 1, c: 3 } },
+        { s: { r: 0, c: 4 }, e: { r: 1, c: 4 } }
+    ];
+    projectNames.forEach((_, index) => {
+        const startCol = 5 + (index * 2);
+        summarySheet["!merges"].push({
+            s: { r: 0, c: startCol },
+            e: { r: 0, c: startCol + 1 }
+        });
+    });
+
+    const detailRows = flattenImportedRows().map(row => ({
+        "Employee Name": row.employeeName,
+        "Designation": row.employeeRole,
+        "Source PDF": row.sourcePdf,
+        "Project Name": row.project,
+        "Working Days": row.days,
+        "Hours": row.hours,
+        "Utilization %": row.utilization,
+        "Monthly Capacity": row.capacity
+    }));
+
+    const workbook = XLSX.utils.book_new();
+    const detailSheet = XLSX.utils.json_to_sheet(detailRows);
+    XLSX.utils.book_append_sheet(workbook, summarySheet, "Summary");
+    XLSX.utils.book_append_sheet(workbook, detailSheet, "Projects");
+    XLSX.writeFile(workbook, `Utilization_Import_${new Date().toISOString().slice(0, 10)}.xlsx`);
+}
+
+document.getElementById("projectName").addEventListener("keypress", function(e){
+    if(e.key === "Enter") addProject();
+});
+document.getElementById("workingDays").addEventListener("keypress", function(e){
+    if(e.key === "Enter") addProject();
+});
+</script>
+</body>
+</html>
