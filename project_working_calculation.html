@@ -83,16 +83,6 @@ button { -webkit-tap-highlight-color: transparent; }
 .modal-actions button { flex: 1; }
 .cancel-btn { min-height: 46px; padding: 12px 18px; border: 1px solid var(--line); border-radius: 10px; background: rgba(255, 255, 255, 0.08); color: var(--white); font-weight: 650; cursor: pointer; }
 .cancel-btn:hover { background: rgba(255, 255, 255, 0.16); }
-.admin-note { margin: 12px 0 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
-.admin-card { text-align: left; }
-.admin-card h3 { margin-bottom: 14px; color: var(--white); }
-.admin-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; }
-.admin-project-list { display: grid; gap: 8px; margin-top: 14px; }
-.admin-project-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: rgba(223, 239, 255, 0.07); }
-.admin-project-name { min-width: 0; overflow-wrap: anywhere; }
-.admin-project-actions { display: flex; flex: 0 0 auto; gap: 8px; }
-.admin-project-actions button { min-height: 36px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 7px; background: rgba(255, 255, 255, 0.08); color: var(--white); cursor: pointer; }
-.admin-project-actions .delete-btn { border-color: rgba(216, 92, 112, 0.4); background: rgba(216, 92, 112, 0.2); }
 
 .submit-btn, .add-btn, .pdf-btn, .import-btn, .excel-btn, .delete-btn {
     min-height: 46px;
@@ -234,8 +224,6 @@ input[type="number"] { appearance: textfield; }
     .delete-btn { flex: 0 0 auto; }
     .employee-profile { gap: 12px; padding: 12px 14px; }
     .modal-actions { flex-direction: column-reverse; }
-    .admin-form { grid-template-columns: 1fr; }
-    .admin-form button { width: 100%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -258,19 +246,6 @@ input[type="number"] { appearance: textfield; }
         <input type="text" id="empNameInput" placeholder="Enter your Full Name" required>
         <input type="text" id="empRoleInput" placeholder="Enter your Designation" required>
         <button class="submit-btn" onclick="initializeDashboard()">Proceed to Dashboard</button>
-        <button class="cancel-btn" type="button" onclick="openHrAdminLogin()">HR Admin Login</button>
-    </div>
-</div>
-
-<div id="hrAdminModal" class="modal-overlay" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="hrAdminTitle">
-    <div class="modal-content">
-        <h2 id="hrAdminTitle">HR Admin Login</h2>
-        <p id="hrAdminDescription">Enter your HR admin password to manage project names.</p>
-        <input type="password" id="hrAdminPassword" placeholder="HR admin password" autocomplete="current-password">
-        <div id="hrAdminError" role="status" aria-live="polite" style="min-height: 20px; color: #ffdce2; font-size: 13px;"></div>
-        <button class="submit-btn" id="hrAdminSubmit" type="button" onclick="authenticateHrAdmin()">Log in</button>
-        <button class="cancel-btn" type="button" onclick="closeHrAdminLogin()">Cancel</button>
-        <p class="admin-note">This standalone page cannot provide server-level security.</p>
     </div>
 </div>
 
@@ -305,27 +280,27 @@ input[type="number"] { appearance: textfield; }
                     <path d="M5 20a7 7 0 0 1 14 0"></path>
                 </svg>
             </span>
-            <button class="logout-btn" type="button" onclick="openHrAdminLogin()">HR Admin</button>
             <button class="logout-btn" type="button" onclick="showLogoutConfirmation()" aria-haspopup="dialog">Log out</button>
         </div>
     </div>
 
-    <div class="card admin-card" id="adminProjectCard" style="display: none;">
-        <div class="project-header">
-            <h3>HR Admin: Project Names</h3>
-            <button class="logout-btn" type="button" onclick="closeHrAdminPanel()">Done</button>
-        </div>
-        <div class="admin-form">
-            <input type="text" id="adminProjectName" placeholder="Enter project name" maxlength="80">
-            <button class="add-btn" id="saveProjectNameButton" type="button" onclick="saveProjectName()">Add Project Name</button>
-        </div>
-        <div class="admin-project-list" id="adminProjectList"></div>
-    </div>
-
     <div class="card">
         <div class="form-grid">
+            <!-- <input type="text" id="projectName" placeholder="Enter Project Name"> -->
 <select id="projectName" name="projectName" class="form-control">
     <option value="">Select Project Name</option>
+    <option value="Brilliant IOT">Brilliant IOT</option>
+    <option value="Sobha Modular">Sobha Modular</option>
+    <option value="Exelixi">Exelixi</option>
+    <option value="EasyCloud WMS">EasyCloud WMS</option>
+    <option value="Ateos WMS">Ateos WMS</option>
+    <option value="Galfar WMS">Galfar WMS</option>
+    <option value="Penver WMS">Penver WMS</option>
+    <option value="Finolex WMS">Finolex WMS</option>
+    <option value="GWC">GWC</option>
+    <option value="DFDS">DFDS</option>
+    <option value="Samsonite">Samsonite</option>
+    <option value="Pollution Doser">Pollution Doser</option>
 </select>
 
             <input type="number" id="workingDays" placeholder="Working Days" min="0" max="22" step="0.5" inputmode="decimal">
@@ -382,182 +357,11 @@ input[type="number"] { appearance: textfield; }
 const HOURS_PER_DAY = 8;
 const WORKING_DAYS_MONTH = 22;
 const MONTHLY_CAPACITY = HOURS_PER_DAY * WORKING_DAYS_MONTH;
-const DEFAULT_PROJECT_NAMES = [
-    "Brilliant IOT", "Sobha Modular", "Exelixi", "EasyCloud WMS", "Ateos WMS",
-    "Galfar WMS", "Penver WMS", "Finolex WMS", "GWC", "DFDS", "Samsonite", "Pollution Doser"
-];
-const PROJECT_NAMES_STORAGE_KEY = "utilizationProjectNames";
-const HR_ADMIN_PASSWORD_SALT = "brilliant-hr-admin-v1";
-const HR_ADMIN_PASSWORD_HASH = "d9df4c61515c03c8078c685c39f0ba729373b2a3610f6aa0ad7e5fee047d2c44";
 
 let projects = [];
 let employeeData = { name: "", role: "" };
 let importedReports = [];
 let isLoggingOut = false;
-let projectNames = loadProjectNames();
-let editingProjectIndex = null;
-let hrAdminAuthenticated = false;
-
-function loadProjectNames() {
-    try {
-        const storedNames = JSON.parse(localStorage.getItem(PROJECT_NAMES_STORAGE_KEY));
-        if (Array.isArray(storedNames)) {
-            return [...new Set(storedNames.filter(name => typeof name === "string").map(name => name.trim()).filter(Boolean))];
-        }
-    } catch (error) {
-        return DEFAULT_PROJECT_NAMES.slice();
-    }
-    return DEFAULT_PROJECT_NAMES.slice();
-}
-
-function persistProjectNames(nextNames) {
-    try {
-        localStorage.setItem(PROJECT_NAMES_STORAGE_KEY, JSON.stringify(nextNames));
-    } catch (error) {
-        alert("Could not save project names in this browser.");
-        return false;
-    }
-
-    projectNames = nextNames;
-    renderProjectOptions();
-    renderAdminProjectNames();
-    return true;
-}
-
-function renderProjectOptions() {
-    const select = document.getElementById("projectName");
-    if (!select) return;
-
-    const selectedName = select.value;
-    select.replaceChildren(new Option("Select Project Name", ""));
-    projectNames.forEach(name => select.add(new Option(name, name)));
-    if (projectNames.includes(selectedName)) select.value = selectedName;
-}
-
-async function hashAdminPassword(password, salt) {
-    const encodedPassword = new TextEncoder().encode(`${salt}:${password}`);
-    const digest = await crypto.subtle.digest("SHA-256", encodedPassword);
-    return Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");
-}
-
-function openHrAdminLogin() {
-    if (hrAdminAuthenticated) {
-        document.getElementById("adminProjectCard").style.display = "block";
-        document.getElementById("adminProjectCard").scrollIntoView({ behavior: "smooth", block: "start" });
-        return;
-    }
-
-    document.getElementById("hrAdminPassword").value = "";
-    document.getElementById("hrAdminError").textContent = "";
-    document.getElementById("hrAdminModal").style.display = "flex";
-    document.getElementById("hrAdminPassword").focus();
-}
-
-function closeHrAdminLogin() {
-    document.getElementById("hrAdminModal").style.display = "none";
-}
-
-async function authenticateHrAdmin() {
-    const password = document.getElementById("hrAdminPassword").value;
-    const error = document.getElementById("hrAdminError");
-
-    error.textContent = "";
-    try {
-        if (await hashAdminPassword(password, HR_ADMIN_PASSWORD_SALT) !== HR_ADMIN_PASSWORD_HASH) {
-            error.textContent = "Incorrect password.";
-            return;
-        }
-
-        hrAdminAuthenticated = true;
-        closeHrAdminLogin();
-        document.getElementById("employeeModal").style.display = "none";
-        document.getElementById("adminProjectCard").style.display = "block";
-        renderAdminProjectNames();
-        document.getElementById("adminProjectName").focus();
-    } catch (exception) {
-        error.textContent = "Browser storage or secure password hashing is unavailable.";
-    }
-}
-
-function closeHrAdminPanel() {
-    hrAdminAuthenticated = false;
-    editingProjectIndex = null;
-    document.getElementById("adminProjectCard").style.display = "none";
-    document.getElementById("adminProjectName").value = "";
-    document.getElementById("saveProjectNameButton").textContent = "Add Project Name";
-    if (!employeeData.name) document.getElementById("employeeModal").style.display = "flex";
-}
-
-function renderAdminProjectNames() {
-    const list = document.getElementById("adminProjectList");
-    if (!list) return;
-
-    list.innerHTML = projectNames.map((name, index) => `
-        <div class="admin-project-row">
-            <span class="admin-project-name">${escapeHtml(name)}</span>
-            <div class="admin-project-actions">
-                <button type="button" onclick="editProjectName(${index})">Edit</button>
-                <button class="delete-btn" type="button" onclick="deleteProjectName(${index})">Delete</button>
-            </div>
-        </div>
-    `).join("");
-}
-
-function editProjectName(index) {
-    if (!hrAdminAuthenticated || !projectNames[index]) return;
-    editingProjectIndex = index;
-    document.getElementById("adminProjectName").value = projectNames[index];
-    document.getElementById("saveProjectNameButton").textContent = "Save Changes";
-    document.getElementById("adminProjectName").focus();
-}
-
-function saveProjectName() {
-    if (!hrAdminAuthenticated) return;
-    const name = document.getElementById("adminProjectName").value.trim();
-    if (!name) {
-        alert("Enter a project name.");
-        return;
-    }
-
-    const duplicateIndex = projectNames.findIndex(projectName => projectName.toLocaleLowerCase() === name.toLocaleLowerCase());
-    if (duplicateIndex !== -1 && duplicateIndex !== editingProjectIndex) {
-        alert("That project name already exists.");
-        return;
-    }
-
-    const nextNames = projectNames.slice();
-    if (editingProjectIndex === null) {
-        nextNames.push(name);
-    } else {
-        const previousName = nextNames[editingProjectIndex];
-        nextNames[editingProjectIndex] = name;
-        if (persistProjectNames(nextNames)) {
-            projects.forEach(project => {
-                if (project.name === previousName) project.name = name;
-            });
-            renderProjects();
-        }
-        editingProjectIndex = null;
-        document.getElementById("adminProjectName").value = "";
-        document.getElementById("saveProjectNameButton").textContent = "Add Project Name";
-        return;
-    }
-
-    if (persistProjectNames(nextNames)) document.getElementById("adminProjectName").value = "";
-}
-
-function deleteProjectName(index) {
-    if (!hrAdminAuthenticated || !projectNames[index]) return;
-    const name = projectNames[index];
-    if (!confirm(`Remove "${name}" from the project choices? Existing allocations will remain unchanged.`)) return;
-
-    const nextNames = projectNames.filter((_, projectIndex) => projectIndex !== index);
-    if (persistProjectNames(nextNames)) {
-        editingProjectIndex = null;
-        document.getElementById("adminProjectName").value = "";
-        document.getElementById("saveProjectNameButton").textContent = "Add Project Name";
-    }
-}
 
 window.addEventListener("beforeunload", function(event) {
     if (isLoggingOut || (projects.length === 0 && importedReports.length === 0)) return;
@@ -1191,22 +995,6 @@ document.getElementById("projectName").addEventListener("keypress", function(e){
 document.getElementById("workingDays").addEventListener("keypress", function(e){
     if(e.key === "Enter") addProject();
 });
-document.getElementById("adminProjectName").addEventListener("keypress", function(e){
-    if(e.key === "Enter") saveProjectName();
-});
-document.getElementById("hrAdminPassword").addEventListener("keypress", function(e){
-    if(e.key === "Enter") authenticateHrAdmin();
-});
-document.getElementById("hrAdminModal").addEventListener("click", function(event) {
-    if (event.target === this) closeHrAdminLogin();
-});
-document.addEventListener("keydown", function(event) {
-    if (event.key === "Escape" && document.getElementById("hrAdminModal").style.display === "flex") {
-        closeHrAdminLogin();
-    }
-});
-
-renderProjectOptions();
 </script>
 </body>
 </html>
