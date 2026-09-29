@@ -267,11 +267,10 @@ input[type="number"] { appearance: textfield; }
         <h2 id="hrAdminTitle">HR Admin Login</h2>
         <p id="hrAdminDescription">Enter your HR admin password to manage project names.</p>
         <input type="password" id="hrAdminPassword" placeholder="HR admin password" autocomplete="current-password">
-        <input type="password" id="hrAdminConfirmPassword" placeholder="Confirm password" autocomplete="new-password" style="display: none;">
         <div id="hrAdminError" role="status" aria-live="polite" style="min-height: 20px; color: #ffdce2; font-size: 13px;"></div>
         <button class="submit-btn" id="hrAdminSubmit" type="button" onclick="authenticateHrAdmin()">Log in</button>
         <button class="cancel-btn" type="button" onclick="closeHrAdminLogin()">Cancel</button>
-        <p class="admin-note">This login is stored in this browser only and does not provide server-level security.</p>
+        <p class="admin-note">This standalone page cannot provide server-level security.</p>
     </div>
 </div>
 
@@ -388,7 +387,8 @@ const DEFAULT_PROJECT_NAMES = [
     "Galfar WMS", "Penver WMS", "Finolex WMS", "GWC", "DFDS", "Samsonite", "Pollution Doser"
 ];
 const PROJECT_NAMES_STORAGE_KEY = "utilizationProjectNames";
-const HR_ADMIN_STORAGE_KEY = "utilizationHrAdminCredential";
+const HR_ADMIN_PASSWORD_SALT = "brilliant-hr-admin-v1";
+const HR_ADMIN_PASSWORD_HASH = "d9df4c61515c03c8078c685c39f0ba729373b2a3610f6aa0ad7e5fee047d2c44";
 
 let projects = [];
 let employeeData = { name: "", role: "" };
@@ -434,15 +434,6 @@ function renderProjectOptions() {
     if (projectNames.includes(selectedName)) select.value = selectedName;
 }
 
-function getHrAdminCredential() {
-    try {
-        const credential = JSON.parse(localStorage.getItem(HR_ADMIN_STORAGE_KEY));
-        return credential && credential.salt && credential.hash ? credential : null;
-    } catch (error) {
-        return null;
-    }
-}
-
 async function hashAdminPassword(password, salt) {
     const encodedPassword = new TextEncoder().encode(`${salt}:${password}`);
     const digest = await crypto.subtle.digest("SHA-256", encodedPassword);
@@ -456,16 +447,7 @@ function openHrAdminLogin() {
         return;
     }
 
-    const isSetup = !getHrAdminCredential();
-    document.getElementById("hrAdminTitle").textContent = isSetup ? "Set HR Admin Password" : "HR Admin Login";
-    document.getElementById("hrAdminDescription").textContent = isSetup
-        ? "Create a password with at least 8 characters to manage project names."
-        : "Enter your HR admin password to manage project names.";
-    document.getElementById("hrAdminConfirmPassword").style.display = isSetup ? "block" : "none";
     document.getElementById("hrAdminPassword").value = "";
-    document.getElementById("hrAdminConfirmPassword").value = "";
-    document.getElementById("hrAdminPassword").autocomplete = isSetup ? "new-password" : "current-password";
-    document.getElementById("hrAdminSubmit").textContent = isSetup ? "Create Password" : "Log in";
     document.getElementById("hrAdminError").textContent = "";
     document.getElementById("hrAdminModal").style.display = "flex";
     document.getElementById("hrAdminPassword").focus();
@@ -477,26 +459,11 @@ function closeHrAdminLogin() {
 
 async function authenticateHrAdmin() {
     const password = document.getElementById("hrAdminPassword").value;
-    const confirmPassword = document.getElementById("hrAdminConfirmPassword").value;
-    const credential = getHrAdminCredential();
     const error = document.getElementById("hrAdminError");
 
     error.textContent = "";
     try {
-        if (!credential) {
-            if (password.length < 8) {
-                error.textContent = "Use a password with at least 8 characters.";
-                return;
-            }
-            if (password !== confirmPassword) {
-                error.textContent = "The passwords do not match.";
-                return;
-            }
-
-            const salt = Array.from(crypto.getRandomValues(new Uint8Array(16)), byte => byte.toString(16).padStart(2, "0")).join("");
-            const hash = await hashAdminPassword(password, salt);
-            localStorage.setItem(HR_ADMIN_STORAGE_KEY, JSON.stringify({ salt, hash }));
-        } else if (await hashAdminPassword(password, credential.salt) !== credential.hash) {
+        if (await hashAdminPassword(password, HR_ADMIN_PASSWORD_SALT) !== HR_ADMIN_PASSWORD_HASH) {
             error.textContent = "Incorrect password.";
             return;
         }
@@ -1228,9 +1195,6 @@ document.getElementById("adminProjectName").addEventListener("keypress", functio
     if(e.key === "Enter") saveProjectName();
 });
 document.getElementById("hrAdminPassword").addEventListener("keypress", function(e){
-    if(e.key === "Enter") authenticateHrAdmin();
-});
-document.getElementById("hrAdminConfirmPassword").addEventListener("keypress", function(e){
     if(e.key === "Enter") authenticateHrAdmin();
 });
 document.getElementById("hrAdminModal").addEventListener("click", function(event) {
