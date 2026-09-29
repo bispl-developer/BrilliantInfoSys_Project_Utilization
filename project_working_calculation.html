@@ -14,493 +14,220 @@
 }
 
 :root {
-    --navy: #061428;
-    --navy-mid: #0a2748;
-    --navy-card: #0d335c;
-    --blue: #1565c0;
-    --blue-bright: #1e88e5;
-    --blue-light: #42a5f5;
-    --ice: #e8f4ff;
-    --ice-soft: #f4f9ff;
+    color-scheme: dark;
+    --navy: #061426;
+    --navy-mid: #0a2340;
+    --blue: #2e8bdf;
+    --blue-bright: #64b5f6;
+    --ice: #e7f4ff;
     --white: #ffffff;
-    --text: #0b1f36;
-    --muted: #4a6a8a;
-    --primary: #1565c0;
-    --success: #1e88e5;
-    --danger: #c62828;
+    --text: #f4f8fc;
+    --muted: #bfd0e2;
+    --glass: rgba(232, 243, 255, 0.09);
+    --glass-strong: rgba(232, 243, 255, 0.14);
+    --line: rgba(226, 240, 255, 0.2);
+    --danger: #d85c70;
 }
 
 body {
     min-height: 100vh;
-    background:
-        radial-gradient(1200px 500px at 10% -10%, #1565c0 0%, transparent 45%),
-        radial-gradient(900px 400px at 100% 0%, #0d47a1 0%, transparent 40%),
-        linear-gradient(165deg, var(--navy) 0%, var(--navy-mid) 55%, #082445 100%);
-    color: var(--white);
-    padding: 20px;
+    padding: clamp(16px, 3vw, 36px);
+    color: var(--text);
+    background-color: var(--navy);
+    background-image:
+        linear-gradient(rgba(140, 184, 226, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(140, 184, 226, 0.035) 1px, transparent 1px),
+        linear-gradient(145deg, #07182d 0%, #0b2d50 52%, #061426 100%);
+    background-size: 36px 36px, 36px 36px, auto;
+    background-attachment: fixed;
 }
+
+button, input, select { font: inherit; }
+button { -webkit-tap-highlight-color: transparent; }
+
+.container { max-width: 1120px; margin: 0 auto; }
 
 .modal-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(6, 20, 40, 0.88);
-    backdrop-filter: blur(10px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    inset: 0;
     z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(3, 12, 24, 0.78);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+
+.modal-content, .card, .project-card, .employee-profile, .footer {
+    border: 1px solid var(--line);
+    background: var(--glass);
+    box-shadow: 0 18px 48px rgba(0, 8, 20, 0.24), inset 0 1px rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
 }
 
 .modal-content {
-    background: linear-gradient(180deg, #0e3a6b 0%, #0a2748 100%);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    padding: 30px;
-    border-radius: 20px;
-    width: 90%;
-    max-width: 420px;
+    width: min(100%, 430px);
+    padding: clamp(24px, 5vw, 38px);
+    border-radius: 18px;
     text-align: center;
-    box-shadow: 0 24px 50px rgba(0, 40, 90, 0.45);
+    background: linear-gradient(145deg, rgba(28, 71, 111, 0.82), rgba(8, 31, 56, 0.9));
 }
 
-.modal-content h2 {
-    margin-bottom: 10px;
+.modal-content h2 { margin-bottom: 10px; color: var(--white); }
+.modal-content p { margin-bottom: 24px; color: var(--muted); font-size: 14px; }
+.modal-content input { margin-bottom: 12px; }
+.modal-actions { display: flex; justify-content: center; gap: 10px; margin-top: 20px; }
+.modal-actions button { flex: 1; }
+.cancel-btn { min-height: 46px; padding: 12px 18px; border: 1px solid var(--line); border-radius: 10px; background: rgba(255, 255, 255, 0.08); color: var(--white); font-weight: 650; cursor: pointer; }
+.cancel-btn:hover { background: rgba(255, 255, 255, 0.16); }
+
+.submit-btn, .add-btn, .pdf-btn, .import-btn, .excel-btn, .delete-btn {
+    min-height: 46px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 10px;
     color: var(--white);
-}
-
-.modal-content p {
-    color: #c5ddf5;
-    margin-bottom: 25px;
-    font-size: 14px;
-}
-
-.modal-content input {
-    margin-bottom: 15px;
-    background: var(--white);
-    color: var(--text);
-}
-
-.modal-content input::placeholder {
-    color: #7a97b3;
-}
-
-.submit-btn {
-    width: 100%;
-    padding: 14px;
-    border: none;
-    border-radius: 12px;
-    background: linear-gradient(135deg, var(--blue-bright), var(--blue));
-    color: var(--white);
-    font-size: 16px;
-    font-weight: 600;
+    font-weight: 650;
     cursor: pointer;
-    transition: .3s;
-    margin-top: 10px;
+    transition: transform 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
 }
 
-.submit-btn:hover {
+.submit-btn, .add-btn, .pdf-btn, .import-btn, .excel-btn {
+    padding: 12px 18px;
+    background: linear-gradient(135deg, #318edb, #1762a8);
+    box-shadow: 0 8px 22px rgba(23, 98, 168, 0.22);
+}
+
+.submit-btn { width: 100%; margin-top: 8px; font-size: 15px; }
+.add-btn { white-space: nowrap; }
+.import-btn { background: linear-gradient(135deg, #4b9acb, #286b9d); }
+.excel-btn { background: linear-gradient(135deg, #326f9e, #17496f); }
+
+.submit-btn:hover, .add-btn:hover, .pdf-btn:hover, .import-btn:hover, .excel-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(30, 136, 229, 0.4);
+    box-shadow: 0 12px 26px rgba(23, 98, 168, 0.34);
 }
 
-.container {
-    max-width: 1200px;
-    margin: auto;
+button:focus-visible, input:focus-visible, select:focus-visible {
+    outline: 3px solid rgba(126, 198, 255, 0.72);
+    outline-offset: 2px;
 }
 
-.header {
-    text-align: center;
-    margin-bottom: 25px;
-}
-
-.header h1 {
-    font-size: 2rem;
-    margin-bottom: 10px;
-    color: var(--white);
-}
-
-.header > p {
-    color: #c5ddf5;
-}
-
-.employee-profile {
-    background: var(--white);
-    border: 1px solid #cfe4f8;
-    border-radius: 15px;
-    padding: 15px 25px;
-    display: inline-block;
-    margin-top: 15px;
-    box-shadow: 0 8px 24px rgba(8, 40, 90, 0.2);
-}
-
-.employee-profile h3 {
-    color: var(--blue);
-    font-size: 1.4rem;
-    margin-bottom: 4px;
-}
-
-.employee-profile p {
-    color: var(--muted);
-    font-size: 1rem;
-    margin: 0;
-}
-
-.card {
-    background: var(--white);
-    color: var(--text);
-    border: 1px solid #d6e8f8;
-    border-radius: 20px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 12px 28px rgba(6, 28, 64, 0.22);
-}
-
-.form-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr auto;
-    gap: 15px;
-}
-
-.action-bar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 16px;
-}
-
-input {
-    width: 100%;
-    padding: 14px;
-    border: 1px solid #c5d9ee;
-    border-radius: 12px;
-    font-size: 15px;
-    outline: none;
-    background: var(--ice-soft);
-    color: var(--text);
-}
-
-input:focus {
-    border-color: var(--blue-bright);
-    box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.18);
-}
-
-.add-btn,
-.pdf-btn,
-.import-btn,
-.excel-btn {
-    border: none;
-    color: var(--white);
-    border-radius: 12px;
-    padding: 14px 20px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 15px;
-    transition: .3s;
-}
-
-.add-btn {
-    background: linear-gradient(135deg, var(--blue-bright), var(--blue));
-}
-
-.pdf-btn {
-    background: linear-gradient(135deg, #1976d2, #0d47a1);
-}
-
-.import-btn {
-    background: linear-gradient(135deg, #42a5f5, #1565c0);
-}
-
-.excel-btn {
-    background: linear-gradient(135deg, #1e88e5, #0b3d91);
-}
-
-.add-btn:hover,
-.pdf-btn:hover,
-.import-btn:hover,
-.excel-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 18px rgba(21, 101, 192, 0.28);
-}
-
-.excel-btn:disabled,
-.import-btn:disabled {
-    opacity: 0.55;
+.excel-btn:disabled, .import-btn:disabled {
+    opacity: 0.5;
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
 }
 
-.note {
-    margin-top: 12px;
-    color: var(--muted);
-    text-align: center;
-    font-size: 14px;
-}
+.header { margin: 8px 0 28px; text-align: center; }
+.header h1 { margin: 10px 0; color: var(--white); font-size: clamp(1.65rem, 4vw, 2.25rem); }
+.header > p { color: var(--muted); line-height: 1.6; }
+.header > p strong { color: var(--white); }
 
-.summary-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 15px;
-}
+.dashboard-logo { display: block; width: min(100%, 220px); height: 54px; object-fit: contain; margin: 0 auto 14px; }
+.logo { display: block; width: 100%; height: 76px; object-fit: contain; margin: 0 auto 18px; }
+.report-logo { width: 22px; height: 22px; object-fit: contain; }
 
-.summary-box {
-    background: linear-gradient(180deg, var(--ice) 0%, var(--white) 100%);
-    border: 1px solid #d4e7f8;
-    border-radius: 15px;
-    padding: 20px;
-    text-align: center;
-}
-
-.summary-title {
-    color: var(--muted);
-    margin-bottom: 10px;
-}
-
-.summary-value {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: var(--navy-mid);
-}
-
-.project-list {
-    display: grid;
-    gap: 20px;
-}
-
-.project-card {
-    background: var(--white);
-    color: var(--text);
-    border: 1px solid #d6e8f8;
-    border-radius: 20px;
-    padding: 20px;
-    box-shadow: 0 10px 24px rgba(6, 28, 64, 0.16);
-}
-
-.project-header {
-    display: flex;
-    justify-content: space-between;
+.employee-profile {
+    display: inline-flex;
     align-items: center;
-    margin-bottom: 15px;
-}
-
-.project-name {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--navy-mid);
-}
-
-.delete-btn {
-    background: var(--danger);
-    color: var(--white);
-    border: none;
-    padding: 10px 15px;
-    border-radius: 10px;
-    cursor: pointer;
-}
-
-.project-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 15px;
-}
-
-.stat {
-    background: var(--ice);
-    padding: 15px;
+    gap: 22px;
+    margin-top: 16px;
+    padding: 12px 22px;
     border-radius: 12px;
-    text-align: center;
-    border: 1px solid #d4e7f8;
+    background: var(--glass-strong);
 }
+.employee-profile h3 { margin-bottom: 3px; color: var(--white); font-size: 1.1rem; }
+.employee-profile p { color: var(--muted); }
+.profile-icon { display: grid; width: 38px; height: 38px; flex: 0 0 38px; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: rgba(255, 255, 255, 0.1); color: #c5e5ff; }
+.profile-icon svg { width: 21px; height: 21px; }
+.logout-btn { min-height: 38px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; background: rgba(255, 255, 255, 0.08); color: var(--white); font-weight: 600; cursor: pointer; }
+.logout-btn:hover { background: rgba(216, 92, 112, 0.24); }
 
-.stat-title {
-    color: var(--muted);
-    font-size: 14px;
-}
+.card, .project-card { margin-bottom: 18px; padding: clamp(16px, 2.5vw, 24px); border-radius: 16px; }
+.card { color: var(--text); }
+.card > h3 { color: var(--white) !important; }
+.form-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(150px, 1fr) auto; gap: 12px; }
 
-.stat-value {
-    font-size: 1.4rem;
-    font-weight: bold;
-    margin-top: 6px;
-    color: var(--blue);
-}
-
-.progress {
+input, #projectName {
     width: 100%;
-    height: 12px;
-    background: #d7e6f5;
-    border-radius: 50px;
-    overflow: hidden;
-    margin-top: 15px;
-}
-
-.progress-bar {
-    height: 100%;
-    background: linear-gradient(90deg, #42a5f5, #0d47a1);
-    transition: .5s;
-}
-
-.import-status {
-    margin-top: 14px;
+    min-height: 48px;
     padding: 12px 14px;
-    border-radius: 12px;
-    background: var(--ice);
-    border: 1px solid #cfe4f8;
-    color: var(--navy-mid);
-    font-size: 14px;
-}
-
-.file-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 10px;
-}
-
-.file-chip {
-    background: var(--white);
-    border: 1px solid #b9d4ee;
-    color: var(--blue);
-    padding: 6px 10px;
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 600;
-}
-
-.preview-wrap {
-    overflow-x: auto;
-    margin-top: 14px;
-}
-
-
-
-.logo {
-    width: 100%;
-    height: 90px;
-    object-fit: contain;
-    display: block;
-    margin: 0 auto 15px;
-    border-radius: 14px;
-    padding: 10px;
-}
-
-.dashboard-logo {
-    width: 100%;
-    height: 58px;
-    object-fit: contain;
-    vertical-align: middle;
-    margin-right: 12px;
+    border: 1px solid rgba(225, 239, 255, 0.26);
     border-radius: 10px;
-}
-
-.report-logo {
-    width: 22;
-    height: 22;
-    object-fit: contain;
-}
-
-
-#projectName {
-    width: 100%;
-    padding: 12px 14px;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    background-color: #ffffff;
-    color: #374151;
-    font-size: 14px;
-    font-family: Arial, sans-serif;
     outline: none;
-    cursor: pointer;
-    box-sizing: border-box;
+    background: rgba(245, 250, 255, 0.96);
+    color: #102841;
+    font-size: 15px;
+}
+input::placeholder { color: #647b91; }
+input:focus, #projectName:focus { border-color: var(--blue-bright); box-shadow: 0 0 0 3px rgba(100, 181, 246, 0.2); }
+#projectName { cursor: pointer; }
+#projectName option { color: #102841; background: #fff; }
+input[type="number"] { appearance: textfield; }
 
-    /* Dropdown arrow */
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
+.action-bar { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.note { margin-top: 13px; color: var(--muted); text-align: center; font-size: 13px; line-height: 1.6; }
 
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    background-size: 16px;
-    padding-right: 40px;
+.summary-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.summary-box, .stat {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: rgba(223, 239, 255, 0.08);
+}
+.summary-box { min-width: 0; padding: 18px 12px; text-align: center; }
+.summary-title, .stat-title { color: var(--muted); font-size: 13px; }
+.summary-value { margin-top: 8px; color: var(--white); font-size: clamp(1.35rem, 3vw, 1.8rem); font-weight: 700; overflow-wrap: anywhere; }
+
+.project-list { display: grid; gap: 2px; }
+.project-card { color: var(--text); }
+.project-header { display: flex; justify-content: space-between; align-items: center; gap: 14px; margin-bottom: 16px; }
+.project-name { color: var(--white); font-size: 1.15rem; font-weight: 700; overflow-wrap: anywhere; }
+.delete-btn { min-height: 40px; padding: 8px 14px; background: rgba(216, 92, 112, 0.2); color: #ffdce2; }
+.delete-btn:hover { background: rgba(216, 92, 112, 0.38); }
+.project-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.stat { padding: 14px 10px; text-align: center; }
+.stat-value { margin-top: 7px; color: #a8d8ff; font-size: 1.2rem; font-weight: 700; overflow-wrap: anywhere; }
+.progress { height: 8px; margin-top: 16px; overflow: hidden; border-radius: 20px; background: rgba(225, 239, 255, 0.16); }
+.progress-bar { height: 100%; border-radius: inherit; background: linear-gradient(90deg, #9bd5ff, #378fd0); transition: width 300ms ease; }
+
+.import-status { margin-top: 14px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: rgba(223, 239, 255, 0.08); color: var(--text); font-size: 14px; }
+.file-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.file-chip { max-width: 100%; padding: 6px 10px; overflow-wrap: anywhere; border: 1px solid var(--line); border-radius: 7px; background: rgba(223, 239, 255, 0.1); color: #d8edff; font-size: 12px; font-weight: 600; }
+.preview-wrap { margin-top: 14px; overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; }
+.preview-table { width: 100%; min-width: 720px; border-collapse: collapse; }
+.preview-table th, .preview-table td { padding: 10px 12px; border: 1px solid rgba(225, 239, 255, 0.14); text-align: left; font-size: 13px; }
+.preview-table th { background: rgba(26, 91, 145, 0.9); color: var(--white); }
+.preview-table td { color: var(--text); }
+.preview-table tr:nth-child(even) td { background: rgba(223, 239, 255, 0.07); }
+
+.footer { margin-top: 26px; padding: 16px; border-radius: 12px; color: var(--muted); text-align: center; font-size: 14px; }
+.footer strong { color: var(--white); }
+
+@media (max-width: 760px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .form-grid .add-btn, .action-bar button { width: 100%; }
+    .action-bar { display: grid; grid-template-columns: 1fr; }
+    .project-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-#projectName:focus {
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+@media (max-width: 440px) {
+    body { padding: 14px; }
+    .summary-grid { grid-template-columns: 1fr; }
+    .summary-box { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px; text-align: left; }
+    .summary-title { margin: 0; }
+    .summary-value { margin: 0; }
+    .project-header { align-items: flex-start; }
+    .delete-btn { flex: 0 0 auto; }
+    .employee-profile { gap: 12px; padding: 12px 14px; }
+    .modal-actions { flex-direction: column-reverse; }
 }
 
-#projectName:hover {
-    border-color: #9ca3af;
-}
-
-#projectName option {
-    padding: 10px;
-    color: #374151;
-    background: #ffffff;
-}
-
-/* Mobile responsive */
-@media (max-width: 600px) {
-    #projectName {
-        padding: 11px 12px;
-        font-size: 14px;
-    }
-}
-
-.preview-table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 720px;
-}
-
-.preview-table th,
-.preview-table td {
-    border: 1px solid #d4e7f8;
-    padding: 10px 12px;
-    text-align: left;
-    font-size: 13px;
-}
-
-.preview-table th {
-    background: linear-gradient(135deg, #1565c0, #0d47a1);
-    color: var(--white);
-}
-
-.preview-table tr:nth-child(even) td {
-    background: var(--ice-soft);
-}
-
-.footer {
-    margin-top: 30px;
-    text-align: center;
-    color: #c5ddf5;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    border-radius: 15px;
-    padding: 18px;
-}
-
-.footer strong {
-    color: var(--white);
-}
-
-@media(max-width: 768px) {
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
-    .action-bar button {
-        width: 100%;
-    }
-    .project-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
-    .delete-btn {
-        width: 100%;
-    }
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
 }
 </style>
 </head>
@@ -522,6 +249,17 @@ input:focus {
     </div>
 </div>
 
+<div id="logoutModal" class="modal-overlay" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="logoutTitle">
+    <div class="modal-content">
+        <h2 id="logoutTitle">Log out of your workspace?</h2>
+        <p>Your current projects and imported reports will be cleared.</p>
+        <div class="modal-actions">
+            <button class="cancel-btn" id="cancelLogout" onclick="cancelLogout()">Stay here</button>
+            <button class="submit-btn" id="confirmLogout" onclick="logout()">Log out</button>
+        </div>
+    </div>
+</div>
+
 <div class="container">
 
     <div class="header">
@@ -532,8 +270,17 @@ input:focus {
             <strong>176 Hours</strong>
         </p>
         <div class="employee-profile" id="employeeProfileDisplay" style="display: none;">
-            <h3 id="displayEmpName">Name</h3>
-            <p id="displayEmpRole">Designation</p>
+            <div>
+                <h3 id="displayEmpName">Name</h3>
+                <p id="displayEmpRole">Designation</p>
+            </div>
+            <span class="profile-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="8" r="3.5"></circle>
+                    <path d="M5 20a7 7 0 0 1 14 0"></path>
+                </svg>
+            </span>
+            <button class="logout-btn" type="button" onclick="showLogoutConfirmation()" aria-haspopup="dialog">Log out</button>
         </div>
     </div>
 
@@ -542,21 +289,21 @@ input:focus {
             <!-- <input type="text" id="projectName" placeholder="Enter Project Name"> -->
 <select id="projectName" name="projectName" class="form-control">
     <option value="">Select Project Name</option>
-     <option value="WMS">Brilliant IOT</option>
+    <option value="Brilliant IOT">Brilliant IOT</option>
     <option value="Sobha Modular">Sobha Modular</option>
     <option value="Exelixi">Exelixi</option>
-    <option value="WMS">EasyCloud WMS</option>
-     <option value="WMS">Ateos WMS</option>
-     <option value="WMS">Galfar WMS</option>
-     <option value="WMS">Penver WMS</option>
-     <option value="WMS">Finolex WMS</option>
-    <option value="WMS">GWC</option>
+    <option value="EasyCloud WMS">EasyCloud WMS</option>
+    <option value="Ateos WMS">Ateos WMS</option>
+    <option value="Galfar WMS">Galfar WMS</option>
+    <option value="Penver WMS">Penver WMS</option>
+    <option value="Finolex WMS">Finolex WMS</option>
+    <option value="GWC">GWC</option>
     <option value="DFDS">DFDS</option>
-     <option value="Samsonite">Samsonite</option>
-     <option value="Pollution Doser">Pollution Doser</option>
+    <option value="Samsonite">Samsonite</option>
+    <option value="Pollution Doser">Pollution Doser</option>
 </select>
 
-            <input type="number" id="workingDays" placeholder="Working Days">
+            <input type="number" id="workingDays" placeholder="Working Days" min="0" max="22" step="0.5" inputmode="decimal">
             <button class="add-btn" onclick="addProject()">+ Add Project</button>
         </div>
 
@@ -614,6 +361,13 @@ const MONTHLY_CAPACITY = HOURS_PER_DAY * WORKING_DAYS_MONTH;
 let projects = [];
 let employeeData = { name: "", role: "" };
 let importedReports = [];
+let isLoggingOut = false;
+
+window.addEventListener("beforeunload", function(event) {
+    if (isLoggingOut || (projects.length === 0 && importedReports.length === 0)) return;
+    event.preventDefault();
+    event.returnValue = "";
+});
 
 if (window.pdfjsLib) {
     pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
@@ -633,9 +387,36 @@ function initializeDashboard() {
 
     document.getElementById("displayEmpName").innerText = employeeData.name;
     document.getElementById("displayEmpRole").innerText = employeeData.role;
-    document.getElementById("employeeProfileDisplay").style.display = "inline-block";
+    document.getElementById("employeeProfileDisplay").style.display = "inline-flex";
     document.getElementById("employeeModal").style.display = "none";
 }
+
+function showLogoutConfirmation() {
+    document.getElementById("logoutModal").style.display = "flex";
+    document.getElementById("cancelLogout").focus();
+}
+
+function cancelLogout() {
+    document.getElementById("logoutModal").style.display = "none";
+    document.querySelector(".logout-btn").focus();
+}
+
+function logout() {
+    isLoggingOut = true;
+    projects = [];
+    importedReports = [];
+    window.location.reload();
+}
+
+document.getElementById("logoutModal").addEventListener("click", function(event) {
+    if (event.target === this) cancelLogout();
+});
+
+document.addEventListener("keydown", function(event) {
+    if (event.key === "Escape" && document.getElementById("logoutModal").style.display === "flex") {
+        cancelLogout();
+    }
+});
 
 document.getElementById("empRoleInput").addEventListener("keypress", function(e){
     if(e.key === "Enter") initializeDashboard();
@@ -682,6 +463,16 @@ function deleteProject(id){
     renderProjects();
 }
 
+function escapeHtml(value) {
+    return String(value).replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    })[character]);
+}
+
 function renderProjects(){
     const container = document.getElementById("projectList");
     let totalHours = 0;
@@ -702,7 +493,7 @@ function renderProjects(){
         return `
         <div class="project-card">
             <div class="project-header">
-                <div class="project-name">${project.name}</div>
+                <div class="project-name">${escapeHtml(project.name)}</div>
                 <button class="delete-btn" onclick="deleteProject(${project.id})">Delete</button>
             </div>
             <div class="project-stats">
@@ -1056,11 +847,11 @@ function renderImportedPreview() {
     card.style.display = "block";
     status.textContent = `Imported ${importedReports.length} PDF file(s). Extracted ${rows.length} project row(s) for Excel.`;
     chips.innerHTML = importedReports.map(report =>
-        `<span class="file-chip">${report.fileName} (${report.projects.length} project${report.projects.length === 1 ? "" : "s"})</span>`
+        `<span class="file-chip">${escapeHtml(report.fileName)} (${report.projects.length} project${report.projects.length === 1 ? "" : "s"})</span>`
     ).join("");
 
     const projectHeaders = projectNames.map(name =>
-        `<th colspan="2">${name}</th>`
+        `<th colspan="2">${escapeHtml(name)}</th>`
     ).join("");
     const projectSubHeaders = projectNames.map(() =>
         `<th>Hours</th><th>Utilization %</th>`
@@ -1090,9 +881,9 @@ function renderImportedPreview() {
                 }).join("");
                 return `
                     <tr>
-                        <td>${report.employeeName || ""}</td>
-                        <td>${report.employeeRole || ""}</td>
-                        <td>${report.fileName}</td>
+                        <td>${escapeHtml(report.employeeName || "")}</td>
+                        <td>${escapeHtml(report.employeeRole || "")}</td>
+                        <td>${escapeHtml(report.fileName)}</td>
                         <td>${allocated}</td>
                         <td>${report.utilization || ""}</td>
                         ${cells}
